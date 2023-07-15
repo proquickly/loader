@@ -1,0 +1,21 @@
+#!/bin/bash
+if [ "$#" -ne 4 ] ; then
+  echo "Usage: pypit <project root> <project> <message> <version# 0.0>" 
+  exit 1
+fi
+
+PROJECT_ROOT=$1
+PROJECT=$2
+FULL_PROJECT=$PROJECT_ROOT/$PROJECT
+
+if [ -d "$FULL_PROJECT" ]; then
+  cd $FULL_PROJECT
+  git tag -a -m "$3" $4 
+  make clean
+  tox -e clean
+  tox -e build
+  tox -e publish
+else
+  echo Project $FULL_PROJECT does not exist.
+  exit 1
+fi
